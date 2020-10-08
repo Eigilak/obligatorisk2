@@ -18,17 +18,6 @@ export default class DashboardScreen extends React.Component {
         user: null
     }
 
-    logOut=async ()=>{
-        try {
-            const response = await firebase.auth().signOut();
-            console.log(response)
-            GLOBAL.user.setState({user:null });
-            this.props.navigation.navigate('LoginScreen')
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
 
     render() {
         const {user} = this.state
@@ -39,11 +28,31 @@ export default class DashboardScreen extends React.Component {
                        render!
                     </Text>
                 </View>
-
-                <View>
-                    <Button title="Log out" onPress={this.logOut}/>
-                </View>
             </View>
         )
     }
 }
+
+
+const styles = StyleSheet.create({
+    mainContainer:{
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    innerContainer:{
+        minWidth:'80%'
+    },
+    error: {
+        color: 'red',
+    },
+    inputField: {
+        borderWidth: 1,
+        margin: 10,
+        padding: 10,
+    },
+    header: {
+        fontSize: 40,
+    },
+});

@@ -14,8 +14,8 @@ import firebase from 'firebase';
 
 export default class SignUpForm extends React.Component {
     state = {
-        email: '',
-        password: '',
+        email: 'e@e.dk',
+        password: '123456',
         isLoading: false,
         isCompleted: false,
         errorMessage: null,
@@ -35,7 +35,6 @@ export default class SignUpForm extends React.Component {
             this.startLoading();
             this.clearError();
             const result = await firebase.auth().signInWithEmailAndPassword(email, password);
-            console.log(result);
             this.endLoading();
             this.setState({ isCompleted: true });
         } catch (error) {
@@ -70,7 +69,7 @@ export default class SignUpForm extends React.Component {
                     {errorMessage && (
                         <Text style={styles.error}>Error: {errorMessage}</Text>
                     )}
-                    {this.renderButton()}
+                    {this.renderButton}
                 </View>
             </View>
         );

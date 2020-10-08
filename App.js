@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { StyleSheet, Text, View,LogBox } from 'react-native';
+import { Alert} from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -11,21 +11,45 @@ import DashboardScreen from "./components/admin/DashboardScreen";
 import CreateItemScreen from "./components/admin/CreateItemScreen";
 import MissingItemScreen from "./components/admin/MissingItemScreen";
 import firebase from "firebase";
+import LogOutScreen from "./components/admin/LogOutScreen";
 
 
 /*Dette er min navigator til når man er logget ind*/
 const AdminBottomNavigator = createBottomTabNavigator({
-    DashboardScreen:{
+    Dashboard:{
         screen:DashboardScreen
     },
-    CreateItemScreen:{
+    CreateItem:{
         screen:CreateItemScreen
     },
-    MissingItemScreen:{
+    MissingItem:{
         screen:MissingItemScreen
-    }
+    },
+    /*LogOut: {
+        screen: LogOutScreen,
+        navigationOptions: ({navigation}) => ({
+            tabBarOnPress: (scene, jumpToIndex) => {
+                return Alert.alert(   // Shows up the alert without redirecting anywhere
+                    'Confirmation required'
+                    , 'Do you really want to logout?'
+                    , [
+                        {
+                            text: 'Accept', onPress:async () => {
+                                try {
+                                    const response = await firebase.auth().signOut();
+                                } catch (e) {
+                                    console.log(e);
+                                }
+                            }
+                        },
+                        {text: 'Cancel'}
+                    ]
+                );
+            }
 
-})
+        })
+    }*/
+});
 /*Min navigator hvis man ikke er logget ind*/
  const LoginBottomNavigator = createBottomTabNavigator({
      LoginScreen:{

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { Alert} from 'react-native';
+import { Alert,Platform,LogBox} from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -12,51 +12,105 @@ import CreateItemScreen from "./components/admin/CreateItemScreen";
 import MissingItemScreen from "./components/admin/MissingItemScreen";
 import firebase from "firebase";
 import LogOutScreen from "./components/admin/LogOutScreen";
-
+import ScanScreen from "./components/scan/ScanScreen";
+import { AntDesign,MaterialIcons } from '@expo/vector-icons';
 
 /*Dette er min navigator til når man er logget ind*/
 const AdminBottomNavigator = createBottomTabNavigator({
     Dashboard:{
-        screen:DashboardScreen
+        screen:DashboardScreen,
+        navigationOptions:{
+            tabBarIcon:({tintColor}) =>(
+                <AntDesign name="dashboard" size={24} color={tintColor} />
+                )
+        }
     },
     CreateItem:{
-        screen:CreateItemScreen
+        screen:CreateItemScreen,
+        navigationOptions:{
+            tabBarIcon:({tintColor}) =>(
+                <AntDesign name="pluscircle" size={24} color={tintColor} />
+                )
+        }
     },
     MissingItem:{
-        screen:MissingItemScreen
+        screen:MissingItemScreen,
+        navigationOptions:{
+            tabBarIcon:({tintColor}) =>(
+                <AntDesign name="exclamationcircle" size={24} color={tintColor} />
+            )
+        }
     },
-    /*LogOut: {
+    LogOut: {
         screen: LogOutScreen,
         navigationOptions: ({navigation}) => ({
             tabBarOnPress: (scene, jumpToIndex) => {
-                return Alert.alert(   // Shows up the alert without redirecting anywhere
-                    'Confirmation required'
-                    , 'Do you really want to logout?'
-                    , [
-                        {
-                            text: 'Accept', onPress:async () => {
-                                try {
-                                    const response = await firebase.auth().signOut();
-                                } catch (e) {
-                                    console.log(e);
-                                }
-                            }
-                        },
-                        {text: 'Cancel'}
-                    ]
-                );
-            }
+                if(Platform.OS === 'web')
+                {
+                    if(confirm('Vil du logge ud? ')){
 
-        })
-    }*/
+                        try {
+                            const response =  firebase.auth().signOut();
+                        } catch (e) {
+                            console.log(e);
+                        }
+                    }
+                }else {
+                    return Alert.alert(   // Shows up the alert without redirecting anywhere
+                        'Confirmation required'
+                        , 'Do you really want to logout?'
+                        , [
+                            {
+                                text: 'Accept', onPress:async () => {
+                                    try {
+                                        const response = await firebase.auth().signOut();
+
+                                    } catch (e) {
+                                        console.log(e);
+                                    }
+                                }
+                            },
+                            {text: 'Cancel'}
+                        ]
+                    );
+
+                }
+
+
+            }
+            ,
+            tabBarIcon:({tintColor}) =>(
+                <AntDesign name="logout" size={24} color={tintColor} />
+            )
+
+        }),
+
+    }
 });
 /*Min navigator hvis man ikke er logget ind*/
  const LoginBottomNavigator = createBottomTabNavigator({
      LoginScreen:{
-         screen: LoginScreen
+         screen: LoginScreen,
+         navigationOptions:{
+             tabBarIcon:({tintColor}) =>(
+                 <AntDesign name="login" size={24} color={tintColor} />
+             )
+         }
      },
      SignupScreen:{
-         screen:SignUpScreen
+         screen:SignUpScreen,
+         navigationOptions:{
+             tabBarIcon:({tintColor}) =>(
+                 <MaterialIcons name="account-circle" size={24} color={tintColor} />             )
+         }
+     },
+     ScanIt:{
+         screen:ScanScreen,
+         navigationOptions:{
+             tabBarIcon:({tintColor}) =>(
+                 <AntDesign name="scan1" size={24} color={tintColor} />
+             )
+         }
      }
      });
 
@@ -65,15 +119,29 @@ const AdminBottomNavigator = createBottomTabNavigator({
  const AdminContainer = createAppContainer(AdminBottomNavigator)
 
 
+
+
 export default class App extends React.Component{
      constructor() {
          super();
          GLOBAL.user = this
+         this.init();
+         this.observeAuth();
      }
     state={
         user:null
     }
-    UNSAFE_componentWillMount() {
+
+
+    componentWillUnmount() {
+        // fix Warning: Can't perform a React state update on an unmounted component
+        this.setState = (state,callback)=>{
+            return;
+        };
+    }
+
+
+    init = () =>{
         const fireBaseConfig ={
             apiKey: "AIzaSyAAMyAaetUPuzNzy26yDezUyBO2n8DYYYA",
             authDomain: "obligatorisk2.firebaseapp.com",
@@ -88,9 +156,14 @@ export default class App extends React.Component{
         if (!firebase.apps.length) {
             firebase.initializeApp(fireBaseConfig);
         }
-
+    }
+    observeAuth = () => {
         firebase.auth().onAuthStateChanged(user => {
             this.setState({ user });
+
+            GLOBAL.user.setState({
+                user:user
+            })
         });
     }
 

@@ -8,7 +8,8 @@ export default class MissingItemScreen extends React.Component {
         return(
             <View>
                 <Text>
-                    DashboardScreen
+                    DashboardScreen - mine ting
+
                 </Text>
             </View>
         )

@@ -9,11 +9,13 @@ import SignUpScreen from "./components/Login/SignUpScreen";
 import GLOBAL from './components/User.js'
 import DashboardScreen from "./components/admin/DashboardScreen";
 import CreateItemScreen from "./components/admin/CreateItemScreen";
-import MissingItemScreen from "./components/admin/MissingItemScreen";
+import SettingsScreen from "./components/admin/SettingsScreen";
 import firebase from "firebase";
 import LogOutScreen from "./components/admin/LogOutScreen";
 import ScanScreen from "./components/scan/ScanScreen";
-import { AntDesign,MaterialIcons } from '@expo/vector-icons';
+import { AntDesign,MaterialIcons,Ionicons } from '@expo/vector-icons';
+
+LogBox.ignoreAllLogs(true)
 
 /*Dette er min navigator til når man er logget ind*/
 const AdminBottomNavigator = createBottomTabNavigator({
@@ -33,12 +35,11 @@ const AdminBottomNavigator = createBottomTabNavigator({
                 )
         }
     },
-    MissingItem:{
-        screen:MissingItemScreen,
+    SettingsScreen:{
+        screen:SettingsScreen,
         navigationOptions:{
             tabBarIcon:({tintColor}) =>(
-                <AntDesign name="exclamationcircle" size={24} color={tintColor} />
-            )
+                <AntDesign name="setting" size={24} color={tintColor} />                )
         }
     },
     LogOut: {
@@ -57,11 +58,11 @@ const AdminBottomNavigator = createBottomTabNavigator({
                     }
                 }else {
                     return Alert.alert(   // Shows up the alert without redirecting anywhere
-                        'Confirmation required'
-                        , 'Do you really want to logout?'
+                        'Godkendt følgende'
+                        , 'Vil du gerne logge ud?'
                         , [
                             {
-                                text: 'Accept', onPress:async () => {
+                                text: 'Ja', onPress:async () => {
                                     try {
                                         const response = await firebase.auth().signOut();
 
@@ -70,7 +71,7 @@ const AdminBottomNavigator = createBottomTabNavigator({
                                     }
                                 }
                             },
-                            {text: 'Cancel'}
+                            {text: 'Nej'}
                         ]
                     );
 
@@ -89,7 +90,7 @@ const AdminBottomNavigator = createBottomTabNavigator({
 });
 /*Min navigator hvis man ikke er logget ind*/
  const LoginBottomNavigator = createBottomTabNavigator({
-     LoginScreen:{
+     Login:{
          screen: LoginScreen,
          navigationOptions:{
              tabBarIcon:({tintColor}) =>(
@@ -97,7 +98,7 @@ const AdminBottomNavigator = createBottomTabNavigator({
              )
          }
      },
-     SignupScreen:{
+     Signup:{
          screen:SignUpScreen,
          navigationOptions:{
              tabBarIcon:({tintColor}) =>(

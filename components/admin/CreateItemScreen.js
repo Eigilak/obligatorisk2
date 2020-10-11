@@ -12,6 +12,7 @@ import {
 import firebase from 'firebase';
 import TitleModule from "./Layouts/TitleModule";
 import CheckBox from '@react-native-community/checkbox';
+import {Picker} from '@react-native-community/picker';
 
 
 
@@ -21,8 +22,7 @@ export default class AddCar extends React.Component {
         brand: '',
         year: '',
         QR_id: '',
-        item_missing:'',
-        item_found:'',
+        status:'',
         item_found_placement:''
     };
 
@@ -35,12 +35,12 @@ export default class AddCar extends React.Component {
     handleQR_IDChange = text => this.setState({ QR_id: text });
 
     handleSave = () => {
-        const { item_name, brand, year, QR_id,item_missing,item_found } = this.state;
+        const { item_name, brand, year, QR_id,status} = this.state;
         try {
             const reference = firebase
                 .database()
                 .ref('/items/')
-                .push({ item_name, brand, year, QR_id,item_missing,item_found
+                .push({ item_name, brand, year, QR_id,status
                 });
             Alert.alert(`Saved`);
             this.setState({
@@ -48,7 +48,6 @@ export default class AddCar extends React.Component {
                 brand: '',
                 year: '',
                 QR_id: '',
-                item_missing:false,
                 item_found:''
             });
         } catch (error) {
@@ -57,19 +56,23 @@ export default class AddCar extends React.Component {
     };
 
     render() {
-        const { item_name, brand, year, QR_id,item_missing } = this.state;
+        const { item_name, brand, year, QR_id,status } = this.state;
         return (
             <SafeAreaView style={styles.container}>
-                <ScrollView>
+                <ScrollView style={styles.scrollView}>
                     <TitleModule title="Opret din ejendel"/>
 
                     <View style={styles.row}>
-                        <Text style={styles.label}>Item Name</Text>
+                        <Text style={styles.label}>Ejendels navn</Text>
                         <TextInput
                             value={item_name}
                             onChangeText={this.handleItem_nameChange}
                             style={styles.input}
                         />
+
+                        {!item_name && (
+                            <Text style={{ color: "red" }}>{item_name}</Text>
+                        )}
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Brand</Text>
@@ -80,7 +83,7 @@ export default class AddCar extends React.Component {
                         />
                     </View>
                     <View style={styles.row}>
-                        <Text style={styles.label}>Year</Text>
+                        <Text style={styles.label}>Årgang</Text>
                         <TextInput
                             value={year}
                             onChangeText={this.handleYearChange}
@@ -97,13 +100,20 @@ export default class AddCar extends React.Component {
                     </View>
 
                     <View style={styles.row}>
-                        <Text style={styles.label}>Is item missing?</Text>
-                        <CheckBox
-                            value={item_missing}
-                            onValueChange={() => { this.setState({ item_missing: !item_missing })}}
-                        />
+                        <Text style={styles.label}>Status</Text>
+                        <Picker
+                            selectedValue={status}
+                            style={{ width: '50%',marginTop:-12,borderWidth: 1}}
+                            onValueChange={(itemValue, itemIndex) =>
+                                this.setState({status: itemValue})
+                            }>
+                            <Picker.Item label="OK" value="OK" />
+                            <Picker.Item label="Mistet" value="mistet" />
+                            <Picker.Item label="Fundet" value="Fundet" />
+                        </Picker>
                     </View>
-                    <Button title="Add Item" onPress={this.handleSave} />
+
+                    <Button title="Tilføj ejendel" onPress={this.handleSave} />
                 </ScrollView>
             </SafeAreaView>
         );
@@ -116,6 +126,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginHorizontal:40,
         marginVertical:150
+    },
+    scrollView:{
+        minHeight:400
     },
     row: {
         flexDirection: 'row',

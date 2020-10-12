@@ -4,29 +4,31 @@ import * as React from 'react';
 import GLOBAL from '../../components/User.js'
 import step1 from '../../assets/images/scanIT/step1.png'
 import TitleModule from "../admin/Layouts/TitleModule";
+import {Platform} from "react-native-web";
 
 export default class ScanScreen extends React.Component {
     state={
         step:1,
-        status:'fundet',
+        status:'Fundet',
         items:'',
         firstItem:''
     }
-
-
+    /*Når jeg er nået til sidste step ændre status på mistet item til fundet!*/
     changeMissingStatus = () => {
         try{
-            const {item_missing} = this.state;
+            /*Sætter standard værdi*/
+            const {status} = this.state;
+            /*Henter alle items fra firebase*/
             firebase
                 .database()
                 .ref('/items')
                 .on('value', snapshot => {
                     this.setState({ items: snapshot.val() });
                     const items = snapshot.val()
+                    /*Hent første item fra items fra firebase*/
                     const firstItem_id = Object.keys(items)[0]
-                    const item_vals = Object.values(items)[0]
-
-                    console.log(item_vals)
+                    const item_val = Object.values(items)[0]
+                    /*Sætter status til fundet frem for mistet*/
                     firebase
                         .database()
                         .ref('/items/'+firstItem_id)
@@ -34,9 +36,14 @@ export default class ScanScreen extends React.Component {
                         .update({ status });
                     // Når bilen er ændret, går vi tilbage.
 
+                    /*Laver en allert afhængig om man er web eller monbile*/
+                    if(Platform.OS !== "Web"){
+                        Alert.alert(item_val.status ?'Tak for at have fundet:'+ item_val.item_name+" som er meldt savnet" : 'Tak for din besked' );
+                    }else{
+                        alert(item_val ?'Tak for at have fundet:'+ item_val.item_name+" som er meldt savnet" : 'Tak for din besked')
+                    }
                     this.setState({step:1})
-                    Alert.alert(item_vals.item_missing ?'Tak for at have fundet:'+ item_vals.item_name+" som er meldt savnet" : 'Tak for din besked' );
-
+                    /*Naviger til LoginScrenn*/
                     this.props.navigation.navigate("Login");
                 });
         }catch (e){
@@ -50,13 +57,14 @@ export default class ScanScreen extends React.Component {
     }
 
     render() {
-
+        /*Henter states og props */
         const{step} = this.state;
         const{navigation} = this.props
-
+        /*¨1 step*/
         if (step === 1){
             return(
                 <View styles={styles.mainContainer}>
+                    {/*Toucable opacitity til at wrappe mit billede med en onpress event*/}
                     <TouchableOpacity onPress={() => { this.setState({step:2})  }}>
                         <Image
                             style={styles.stepImg}
@@ -67,10 +75,14 @@ export default class ScanScreen extends React.Component {
                 </View>
             )
         }else if(step === 2){
+            /*Tre muligheder for hvad man skal gøre */
             return (
                 <View styles={styles.mainContainer}>
                     <View style={styles.innerContainer}>
                         <TitleModule title="Vælg en mulighed"/>
+
+                        {/*Har valgt at bruge touchable opaciity da man har mere frihed*/}
+
                         <TouchableOpacity style={styles.btn} onPress={() => { this.setState({step:3}) }}>
                             <Text style={styles.btnTxt}>
                                 Send Lokation og automatisk besked om at produkt er fundet
@@ -133,6 +145,8 @@ export default class ScanScreen extends React.Component {
         }
     }
 }
+
+/*Gør så billederne passer til mobilskærmen*/
 const win = Dimensions.get('window');
 const ratio = win.width/541; //541 is actual image width
 

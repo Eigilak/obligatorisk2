@@ -9,7 +9,7 @@ import {Button,Text,
 import firebase from 'firebase';
 
 
-
+/*Samme præncip som Login form, bare med oprettelse af bruger i handle submit*/
 export default class SignUpForm extends React.Component {
     state = {
         email: '',
@@ -45,10 +45,7 @@ export default class SignUpForm extends React.Component {
     };
 
     render = () => {
-        const { errorMessage, email, password, isCompleted } = this.state;
-        if (isCompleted) {
-            return <Text>You are now signed up</Text>;
-        }
+        const { errorMessage, email, password } = this.state;
         return (
             <View style={styles.mainContainer}>
                 <View style={styles.innerContainer}>

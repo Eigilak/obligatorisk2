@@ -15,7 +15,10 @@ import LogOutScreen from "./components/admin/LogOutScreen";
 import ScanScreen from "./components/scan/ScanScreen";
 import { AntDesign,MaterialIcons,Ionicons } from '@expo/vector-icons';
 
-LogBox.ignoreAllLogs(true)
+/*Hvis det ikke er web fjern logbox*/
+if(Platform.OS !== "web"){
+    LogBox.ignoreAllLogs(true)
+}
 
 /*Dette er min navigator til når man er logget ind*/
 const AdminBottomNavigator = createBottomTabNavigator({
@@ -42,6 +45,7 @@ const AdminBottomNavigator = createBottomTabNavigator({
                 <AntDesign name="setting" size={24} color={tintColor} />                )
         }
     },
+    /*Sætter en spoof screen til at håndtere onpress som gør jeg logger ud med firebase*/
     LogOut: {
         screen: LogOutScreen,
         navigationOptions: ({navigation}) => ({
@@ -123,6 +127,7 @@ const AdminBottomNavigator = createBottomTabNavigator({
 
 
 export default class App extends React.Component{
+     /*Constructor til at init og observe auth*/
      constructor() {
          super();
          GLOBAL.user = this
@@ -133,7 +138,7 @@ export default class App extends React.Component{
         user:null
     }
 
-
+/*Sørg for at states bliver nulsat efter de er blevet bvrugt*/
     componentWillUnmount() {
         // fix Warning: Can't perform a React state update on an unmounted component
         this.setState = (state,callback)=>{
@@ -141,7 +146,7 @@ export default class App extends React.Component{
         };
     }
 
-
+/*Init*/
     init = () =>{
         const fireBaseConfig ={
             apiKey: "AIzaSyAAMyAaetUPuzNzy26yDezUyBO2n8DYYYA",
@@ -158,6 +163,7 @@ export default class App extends React.Component{
             firebase.initializeApp(fireBaseConfig);
         }
     }
+    /*Set Auth state*/
     observeAuth = () => {
         firebase.auth().onAuthStateChanged(user => {
             this.setState({ user });
@@ -168,7 +174,7 @@ export default class App extends React.Component{
         });
     }
 
-
+/*Render afhængig om jeg er logget ind*/
     render() {
         if(!this.state.user){
             return <LoginContainer/>

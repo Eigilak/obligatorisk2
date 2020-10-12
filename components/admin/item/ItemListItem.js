@@ -20,7 +20,7 @@ export default class ItemListItem extends React.Component {
         return (
             <TouchableOpacity style={styles.container} onPress={this.handlePress}>
                 <Text style={styles.label}>
-                    {item.item_name} {item.brand} - {item.item_found ? 'Status: Fundet' :''} {item.item_missing ? '- Status: Mistet' : '' }
+                    {item.item_name} {item.brand} - Status: {item.status}
                 </Text>
             </TouchableOpacity>
         );

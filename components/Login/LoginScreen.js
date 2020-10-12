@@ -50,12 +50,9 @@ export default class SignUpForm extends React.Component {
         };
     }
 
-
+/*Login Render*/
     render = () => {
         const { errorMessage, email, password, isCompleted } = this.state;
-        if (isCompleted) {
-            return <Text>You are now logged in</Text>;
-        }
         return (
             <View style={styles.mainContainer}>
                 <View style={styles.innerContainer}>
@@ -81,7 +78,7 @@ export default class SignUpForm extends React.Component {
             </View>
         );
     };
-
+/*Render knapper afhængig og jeg er loadet*/
     renderButton = () => {
         const { isLoading } = this.state;
         if (isLoading) {
@@ -90,7 +87,7 @@ export default class SignUpForm extends React.Component {
         return <Button onPress={this.handleSubmit} title="Login" />;
     };
 }
-
+/*Styles*/
 const styles = StyleSheet.create({
     mainContainer:{
         flex: 1,

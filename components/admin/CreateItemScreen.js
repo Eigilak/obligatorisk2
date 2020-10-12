@@ -11,12 +11,11 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 import TitleModule from "./Layouts/TitleModule";
-import CheckBox from '@react-native-community/checkbox';
 import {Picker} from '@react-native-community/picker';
 
 
 
-export default class AddCar extends React.Component {
+export default class CreateItemScreen extends React.Component {
     state = {
         item_name: '',
         brand: '',
@@ -26,17 +25,17 @@ export default class AddCar extends React.Component {
         item_found_placement:''
     };
 
+    /*Holder øje med value change og sætter det i states */
     handleItem_nameChange = text => this.setState({ item_name: text });
-
     handleBrandChange = text => this.setState({ brand: text });
-
     handleYearChange = text => this.setState({ year: text });
-
     handleQR_IDChange = text => this.setState({ QR_id: text });
+    handleStatusChange = text => {this.setState({status:text}), console.log(text)}
 
     handleSave = () => {
         const { item_name, brand, year, QR_id,status} = this.state;
         try {
+            /*Gem til firebase og tag states med og derefter sæt dem til en intet værdi*/
             const reference = firebase
                 .database()
                 .ref('/items/')
@@ -48,7 +47,7 @@ export default class AddCar extends React.Component {
                 brand: '',
                 year: '',
                 QR_id: '',
-                item_found:''
+                status: ''
             });
         } catch (error) {
             Alert.alert(`Error: ${error.message}`);
@@ -57,6 +56,7 @@ export default class AddCar extends React.Component {
 
     render() {
         const { item_name, brand, year, QR_id,status } = this.state;
+        /*Alle mine input felter*/
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
@@ -99,14 +99,13 @@ export default class AddCar extends React.Component {
                         />
                     </View>
 
+                    {/*Drop down liste*/}
                     <View style={styles.row}>
                         <Text style={styles.label}>Status</Text>
                         <Picker
                             selectedValue={status}
                             style={{ width: '50%',marginTop:-12,borderWidth: 1}}
-                            onValueChange={(itemValue, itemIndex) =>
-                                this.setState({status: itemValue})
-                            }>
+                            onValueChange={this.handleStatusChange}>
                             <Picker.Item label="OK" value="OK" />
                             <Picker.Item label="Mistet" value="mistet" />
                             <Picker.Item label="Fundet" value="Fundet" />
@@ -119,7 +118,7 @@ export default class AddCar extends React.Component {
         );
     }
 }
-
+/*Styles*/
 const styles = StyleSheet.create({
     container: {
         flex: 1,

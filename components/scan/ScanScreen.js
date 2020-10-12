@@ -17,35 +17,45 @@ export default class ScanScreen extends React.Component {
     changeMissingStatus = () => {
         try{
             /*Sætter standard værdi*/
-            const {status} = this.state;
+            const {status,step} = this.state;
             /*Henter alle items fra firebase*/
-            firebase
-                .database()
-                .ref('/items')
-                .on('value', snapshot => {
-                    this.setState({ items: snapshot.val() });
-                    const items = snapshot.val()
-                    /*Hent første item fra items fra firebase*/
-                    const firstItem_id = Object.keys(items)[0]
-                    const item_val = Object.values(items)[0]
-                    /*Sætter status til fundet frem for mistet*/
-                    firebase
-                        .database()
-                        .ref('/items/'+firstItem_id)
-                        // Vi bruger update, så kun de felter vi angiver, bliver ændret
-                        .update({ status });
-                    // Når bilen er ændret, går vi tilbage.
+            if(step === 5){
+                firebase
+                    .database()
+                    .ref('/items')
+                    .on('value', snapshot => {
+                        this.setState({ items: snapshot.val() });
+                        const items = snapshot.val()
+                        if(items){
+                            /*Hent første item fra items fra firebase*/
+                            const firstItem_id = Object.keys(items)[0]
+                            const item_val = Object.values(items)[0]
+                            /*Sætter status til fundet frem for mistet*/
+                            firebase
+                                .database()
+                                .ref('/items/'+firstItem_id)
+                                // Vi bruger update, så kun de felter vi angiver, bliver ændret
+                                .update({ status });
+                            // Når bilen er ændret, går vi tilbage.
 
-                    /*Laver en allert afhængig om man er web eller monbile*/
-                    if(Platform.OS !== "Web"){
-                        Alert.alert(item_val.status ?'Tak for at have fundet:'+ item_val.item_name+" som er meldt savnet" : 'Tak for din besked' );
-                    }else{
-                        alert(item_val ?'Tak for at have fundet:'+ item_val.item_name+" som er meldt savnet" : 'Tak for din besked')
-                    }
-                    this.setState({step:1})
-                    /*Naviger til LoginScrenn*/
-                    this.props.navigation.navigate("Login");
-                });
+                            /*Laver en allert afhængig om man er web eller monbile*/
+                            if(Platform.OS !== "Web"){
+                                Alert.alert(item_val.status ?'Tak for at have fundet:'+ item_val.item_name+" som er meldt savnet" : 'Tak for din besked' );
+                            }else{
+                                alert(item_val ?'Tak for at have fundet:'+ item_val.item_name+" som er meldt savnet" : 'Tak for din besked')
+                            }
+                            this.setState({step:1})
+                            /*Naviger til LoginScrenn*/
+                            this.props.navigation.navigate("Login");
+                        }else {
+                            Alert.alert('Der er ikke oprettet nogen produkter' );
+                            this.setState({step:1})
+                            /*Naviger til LoginScrenn*/
+                            this.props.navigation.navigate("Login");
+                        }
+                    });
+            }
+
         }catch (e){
             console.log(e)
         }

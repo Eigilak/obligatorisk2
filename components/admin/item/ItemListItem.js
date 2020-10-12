@@ -12,7 +12,7 @@ export default class ItemListItem extends React.Component {
         // Her pakker vi ting ud fra props
         const {id, onSelect} = this.props
         // Kalder den onSelect prop vi får, med det ID vi har fået som argument.
-        onSelect(id)
+       /* onSelect(id)*/
     };
 
     render() {

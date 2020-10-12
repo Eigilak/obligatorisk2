@@ -22,7 +22,8 @@ export default class CreateItemScreen extends React.Component {
         year: '',
         QR_id: '',
         status:'',
-        item_found_placement:''
+        item_found_placement:'',
+        tile_id:''
     };
 
     /*Holder øje med value change og sætter det i states */
@@ -47,6 +48,7 @@ export default class CreateItemScreen extends React.Component {
                 brand: '',
                 year: '',
                 QR_id: '',
+                tile_id:'',
                 status: ''
             });
         } catch (error) {

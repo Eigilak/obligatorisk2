@@ -9,7 +9,8 @@ import {
     Alert,
 } from 'react-native';
 import firebase from 'firebase';
-
+import TitleModule from "../admin/Layouts/TitleModule";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 export default class SignUpForm extends React.Component {
@@ -55,8 +56,10 @@ export default class SignUpForm extends React.Component {
         const { errorMessage, email, password, isCompleted } = this.state;
         return (
             <View style={styles.mainContainer}>
+                <TitleModule title="Velkommen til BelongTO"/>
+                <MaterialCommunityIcons name="home-map-marker" size={60} color="#0E71EB" />
                 <View style={styles.innerContainer}>
-                    <Text style={styles.header}>Login up</Text>
+                    <Text style={styles.header}>Login</Text>
                     <TextInput
                         placeholder="email"
                         value={email}
@@ -107,6 +110,6 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     header: {
-        fontSize: 40,
+        fontSize: 20,
     },
 });

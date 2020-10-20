@@ -15,9 +15,12 @@ export default class CarList extends React.Component {
     constructor(props) {
         super(props);
         GLOBAL.user = this;
+
+        this.getItems;
     }
 
-    componentDidMount() {
+
+    getItems = () =>{
         /*Hent alle mine items efter render*/
         firebase
             .database()
@@ -26,9 +29,7 @@ export default class CarList extends React.Component {
                 this.setState({ items: snapshot.val() });
             });
         this.setState({user:GLOBAL.user.state.user})
-
     }
-
 
     render() {
         const { items,user } = this.state;

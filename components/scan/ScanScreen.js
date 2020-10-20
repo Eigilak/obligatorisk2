@@ -77,6 +77,7 @@ export default class ScanScreen extends React.Component {
                     {/*Toucable opacitity til at wrappe mit billede med en onpress event*/}
                     <TouchableOpacity onPress={() => { this.setState({step:2})  }}>
                         <Image
+                            fadeDuration={0}
                             style={styles.stepImg}
                             source={require('../../assets/images/scanIT/step1.png')}
                             rezizeMode={'cover'}
@@ -120,6 +121,7 @@ export default class ScanScreen extends React.Component {
                 <View styles={styles.mainContainer}>
                     <TouchableOpacity onPress={() => { this.setState({step:4}) }}>
                         <Image
+                            fadeDuration={0}
                             style={styles.stepImg}
                             source={require('../../assets/images/scanIT/step3.png')}
                             rezizeMode={'cover'}
@@ -132,6 +134,7 @@ export default class ScanScreen extends React.Component {
                 <View styles={styles.mainContainer}>
                     <TouchableOpacity onPress={() => { this.setState({step:5}) }}>
                         <Image
+                            fadeDuration={0}
                             style={styles.stepImg}
                             source={require('../../assets/images/scanIT/step4.jpg')}
                             rezizeMode={'cover'}
@@ -145,6 +148,7 @@ export default class ScanScreen extends React.Component {
                 <View styles={styles.mainContainer}>
                     <TouchableOpacity onPress={this.changeMissingStatus}>
                         <Image
+                            fadeDuration={0}
                             style={styles.stepImg}
                             source={require('../../assets/images/scanIT/step5.jpg')}
                             rezizeMode={'cover'}

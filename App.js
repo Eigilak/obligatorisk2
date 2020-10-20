@@ -93,7 +93,7 @@ const AdminBottomNavigator = createBottomTabNavigator({
     }
 });
 /*Min navigator hvis man ikke er logget ind*/
- const LoginBottomNavigator = createBottomTabNavigator({
+ const PublicBottomNavigator = createBottomTabNavigator({
      Login:{
          screen: LoginScreen,
          navigationOptions:{
@@ -120,7 +120,7 @@ const AdminBottomNavigator = createBottomTabNavigator({
      });
 
 
- const LoginContainer = createAppContainer(LoginBottomNavigator)
+ const LoginContainer = createAppContainer(PublicBottomNavigator)
  const AdminContainer = createAppContainer(AdminBottomNavigator)
 
 
